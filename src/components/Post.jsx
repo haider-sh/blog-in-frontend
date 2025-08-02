@@ -1,0 +1,30 @@
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
+
+function Post({ id, title, description, date, author }) {
+    return (
+        <div className="blog">
+            <div className="title">
+                <Link to={`/posts/${id}`}>{title}</Link>
+            </div>
+            <div className="info">
+                <div className="date">
+                    {format(date, "dd LLL, yyyy")}
+                </div>
+                •
+                <div className="length">
+                    11 min read
+                </div>
+            </div>
+            <div className="description">
+                    {description}
+            </div>
+            <div className="author">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></svg>
+                {author}
+            </div>
+        </div>
+    );
+}
+
+export default Post;
