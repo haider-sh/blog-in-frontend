@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/Blog.css";
 import Blog from "./Blog";
-// import posts from "../data/postData.js";
 
 function Home() {
 
