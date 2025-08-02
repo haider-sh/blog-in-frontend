@@ -41,6 +41,34 @@ const blogPosts = [
     date: "2024-10-02T11:00:00Z",
     author: "Rachel Adams"
   }
+  ,
+  {
+    title: "Intro to React Hooks",
+    description: "Hooks are a powerful addition to React. This post explains useState, useEffect, and how to build custom hooks.",
+    date: "2024-10-02T11:00:00Z",
+    author: "Rachel Adams"
+  }
+  ,
+  {
+    title: "Intro to React Hooks",
+    description: "Hooks are a powerful addition to React. This post explains useState, useEffect, and how to build custom hooks.",
+    date: "2024-10-02T11:00:00Z",
+    author: "Rachel Adams"
+  }
+  ,
+  {
+    title: "Intro to React Hooks",
+    description: "Hooks are a powerful addition to React. This post explains useState, useEffect, and how to build custom hooks.",
+    date: "2024-10-02T11:00:00Z",
+    author: "Rachel Adams"
+  }
+  ,
+  {
+    title: "Intro to React Hooks",
+    description: "Hooks are a powerful addition to React. This post explains useState, useEffect, and how to build custom hooks.",
+    date: "2024-10-02T11:00:00Z",
+    author: "Rachel Adams"
+  }
 ];
 
 export default blogPosts;

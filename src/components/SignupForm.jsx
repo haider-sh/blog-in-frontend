@@ -1,7 +1,5 @@
 import { useState } from "react";
 import "../styles/Form.css"
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
 import { useNavigate } from "react-router-dom";
 
 function SignupForm() {
@@ -25,7 +23,7 @@ function SignupForm() {
         setConfirmPassword(e.target.value);
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         if (!username || !password || !confirmPassword) {
@@ -35,49 +33,66 @@ function SignupForm() {
             setError("Passwords do not match.");
         }
         else {
-            setError("")
-            navigate("/login");
+            setError("");
+
+            let response = await fetch("http://localhost:8080/signup?role=READER", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            let result = await response.json();
+
+            if (result.success) {
+                navigate("/login");
+            }
+            else {
+                setError(result.message);
+            }
         };
     }
 
     return (
-            <div className="form">
-                <h2>Sign up for Blog In</h2>
-                <form action="" method="post">
-                    <div>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            name="username"
-                            type="text"
-                            value={username}
-                            onChange={handleUsernameChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            name="password"
-                            type="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="confirmpassword">Confirm Password:</label>
-                        <input
-                            name="confirmpassword"
-                            type="password"
-                            value={confirmPassword}
-                            onChange={handleConfirmPasswordChange}
-                        />
-                    </div>
-                    <button onClick={handleSubmit}>Sign Up</button>
-                    {
-                        error &&
-                        <div className="error">{error}</div>
-                    }
-                </form>
-            </div>
+        <div className="form">
+            <h2>Sign up for Blog In</h2>
+            <form action="" method="post">
+                <div>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        name="username"
+                        type="text"
+                        value={username}
+                        onChange={handleUsernameChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        name="password"
+                        type="password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="confirmpassword">Confirm Password:</label>
+                    <input
+                        name="confirmpassword"
+                        type="password"
+                        value={confirmPassword}
+                        onChange={handleConfirmPasswordChange}
+                    />
+                </div>
+                <button onClick={handleSubmit}>Sign Up</button>
+                {
+                    error &&
+                    <div className="error">{error}</div>
+                }
+            </form>
+        </div>
     );
 }
 

@@ -1,18 +1,80 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/Blog.css";
 import Blog from "./Blog";
+// import posts from "../data/postData.js";
 
 function Home() {
 
     let [search, setSearch] = useState("");
+    let [buttons, setButtons] = useState([]);
+    let [currButton, setCurrButton] = useState(1);
+    let [currPosts, setCurrPosts] = useState([]);
+
+    useEffect(() => {
+        async function getPosts() {
+            const response = await fetch("http://localhost:8080/posts?from=0&limit=2");
+            const posts = await response.json();
+
+            if (!posts.success) {
+                console.log("An error occured while fetching posts.");
+                return;
+            }
+
+            setCurrPosts(posts.data);
+
+            let pageButtons = [];
+            for (let i = 1; i <= Math.ceil(posts.data.postsCount / 2) && i < 5; i++) {
+                pageButtons.push(i);
+            }
+
+            setButtons(pageButtons);
+        }
+        getPosts();
+    }, []);
 
     function searchBlog() {
-        console.log(search);
+        return async () => {
+            const response = await fetch(`http://localhost:8080/posts?search=${search}&from=0&limit=2`);
+            const posts = await response.json();
+
+            setCurrPosts(posts.data);
+        }
     }
 
-    let buttons = [];
-    for (let i = 1; i < 5; i++) {
-        buttons.push(i);
+    function showNextPost(index) {
+        return async () => {
+            const response = await fetch(`http://localhost:8080/posts?from=${index * 2}&limit=2`);
+            const posts = await response.json();
+
+            setCurrPosts(posts.data);
+        };
+    }
+
+    function handleLeftBtnClick() {
+        if (currButton === 1) {
+            return;
+        }
+
+        let pageButtons = [];
+        for (let i = currButton - 4; i < currButton; i++) {
+            pageButtons.push(i);
+        }
+        setCurrButton(currButton - 4);
+        setButtons(pageButtons);
+    }
+
+    function handleRightBtnClick() {
+        if (currButton + 4 >= Math.ceil((currPosts.postsCount / 2))) {
+            return;
+        }
+
+        let pageButtons = [];
+        for (let i = currButton + 4; i <= Math.ceil(currPosts.postsCount / 2) && i < currButton + 8; i++) {
+            pageButtons.push(i);
+        }
+
+        setCurrButton(currButton + 4);
+        setButtons(pageButtons);
     }
 
     return (
@@ -28,19 +90,19 @@ function Home() {
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                 />
-                <button onClick={searchBlog}>
+                <button onClick={searchBlog()}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg>
                 </button>
             </div>
-            <Blog />
+            <Blog posts={currPosts.posts ?? currPosts} />
             <div className="pagination">
-                <button className="left"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6" /></svg></button>
+                <button onClick={handleLeftBtnClick} className="left"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6" /></svg></button>
                 {
                     buttons.map(button => (
-                        <button>{button}</button>
+                        <button key={button} onClick={showNextPost(button - 1)}>{button}</button>
                     ))
                 }
-                <button className="right"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></button>
+                <button onClick={handleRightBtnClick} className="right"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6" /></svg></button>
             </div>
         </div>
     );

@@ -1,21 +1,22 @@
 import Post from "./Post";
-import posts from "../data/postData.js";
 
-function Blog(){
+function Blog({ posts }) {
     return (
         <div className="blogs">
-                {
-                    posts.map((post, inx) => (
-                        <Post 
-                        id={inx}
+            {
+                posts?.length ? posts.map(post => (
+                    <Post
+                        key={post.id}
+                        id={post.id}
                         title={post.title}
-                        date={post.date}
+                        date={post.created}
                         description={post.description}
                         author={post.author}
-                        />
-                    ))
-                }
-            </div>
+                    />
+                )) :
+                    "Loading..."
+            }
+        </div>
     );
 }
 

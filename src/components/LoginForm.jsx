@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "../styles/Form.css"
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
+import { AppContext } from "../AppContext.jsx";
 
 function LoginForm() {
 
     let [username, setUsername] = useState("");
     let [password, setPassword] = useState("");
     let [error, setError] = useState("");
-    let [isLoggedIn, setIsLoggedIn] = useOutletContext();
+    let {saveJwtToken, setLoggedIn } = useContext(AppContext);
 
     let navigate = useNavigate();
 
@@ -21,7 +20,7 @@ function LoginForm() {
         setPassword(e.target.value);
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         if (!username || !password) {
@@ -29,40 +28,57 @@ function LoginForm() {
         }
         else {
             setError("")
-            setIsLoggedIn(true);
-            navigate("/");
+            let response = await fetch("http://localhost:8080/login", {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            let result = await response.json();
+
+            if (result.success) {
+                saveJwtToken(result.token);
+                setLoggedIn(true);
+                navigate("/");
+            }
+            else {
+                setError(result.message);
+            }
         };
     }
 
     return (
-            <div className="form">
-                <h2>Log in to your Blog In Account</h2>
-                <form action="" method="post">
-                    <div>
-                        <label htmlFor="username">Username:</label>
-                        <input
-                            name="username"
-                            type="text"
-                            value={username}
-                            onChange={handleUsernameChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            name="password"
-                            type="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                        />
-                    </div>
-                    <button onClick={handleSubmit}>Log In</button>
-                    {
-                        error &&
-                        <div className="error">{error}</div>
-                    }
-                </form>
-            </div>
+        <div className="form">
+            <h2>Log in to your Blog In Account</h2>
+            <form action="" method="post">
+                <div>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        name="username"
+                        type="text"
+                        value={username}
+                        onChange={handleUsernameChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        name="password"
+                        type="password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                    />
+                </div>
+                <button onClick={handleSubmit}>Log In</button>
+                {
+                    error &&
+                    <div className="error">{error}</div>
+                }
+            </form>
+        </div>
     );
 }
 

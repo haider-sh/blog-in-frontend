@@ -1,7 +1,11 @@
+import { useContext } from "react";
 import "../styles/Header.css";
 import { Link } from "react-router-dom";
+import { AppContext } from "../AppContext";
 
-function Header({ loggedIn }) {
+function Header() {
+
+    let {isLoggedIn, logUserOut, loggedIn} = useContext(AppContext);
 
     return (
         <div className="header">
@@ -14,16 +18,16 @@ function Header({ loggedIn }) {
             <div className="links">
                 <Link to="/">Blog</Link>
                 {
-                    !loggedIn &&
+                    (!isLoggedIn() || !loggedIn) &&
                     <Link to="/login">Log In</Link>
                 }
                 {
-                    !loggedIn &&
+                    (!isLoggedIn() || !loggedIn) &&
                     <Link to="/signup">Sign Up</Link>
                 }
                 {
-                    loggedIn &&
-                    <Link to="/logout">Logout</Link>
+                   ( isLoggedIn() || loggedIn) &&
+                    <Link onClick={logUserOut} >Logout</Link>
                 }
             </div>
         </div>
