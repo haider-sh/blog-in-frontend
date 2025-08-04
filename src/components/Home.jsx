@@ -9,11 +9,9 @@ function Home() {
     let [currButton, setCurrButton] = useState(1);
     let [currPosts, setCurrPosts] = useState([]);
     let [error, setError] = useState("");
-    let [error, setError] = useState("");
 
     useEffect(() => {
         async function getPosts() {
-            const response = await fetch("https://blog-in-backend.vercel.app/posts?from=0&limit=2");
             const response = await fetch("https://blog-in-backend.vercel.app/posts?from=0&limit=2");
             const posts = await response.json();
 
@@ -26,19 +24,11 @@ function Home() {
             if (!posts.data.posts.length) {
                 console.log("No posts found");
                 setError("No posts found");
-                setError(posts.message);
-                return;
-            }
-
-            if (!posts.data.posts.length) {
-                console.log("No posts found");
-                setError("No posts found");
                 return;
             }
 
             setError("");
 
-            setError("");
 
             setCurrPosts(posts.data);
 
@@ -55,22 +45,8 @@ function Home() {
     function searchBlog() {
         return async () => {
             const response = await fetch(`https://blog-in-backend.vercel.app/posts?search=${search}&from=0&limit=2`);
-            const response = await fetch(`https://blog-in-backend.vercel.app/posts?search=${search}&from=0&limit=2`);
             const posts = await response.json();
 
-            if (!posts.success) {
-                console.log("An error occured while fetching posts.");
-                setError(posts.message);
-                return;
-            }
-
-            if (!posts.data.posts.length) {
-                console.log("No posts found");
-                setError("No posts found");
-                return;
-            }
-
-            setError("");
             if (!posts.success) {
                 console.log("An error occured while fetching posts.");
                 setError(posts.message);
@@ -91,7 +67,6 @@ function Home() {
     function showNextPost(index) {
         return async () => {
             const response = await fetch(`https://blog-in-backend.vercel.app/posts?from=${index * 2}&limit=2`);
-            const response = await fetch(`https://blog-in-backend.vercel.app/posts?from=${index * 2}&limit=2`);
             const posts = await response.json();
 
             if (!posts.success) {
@@ -100,10 +75,9 @@ function Home() {
                 return;
             }
 
-            setError("");
-            if (!posts.success) {
-                console.log("An error occured while fetching posts.");
-                setError(posts.message);
+            if (!posts.data.posts.length) {
+                console.log("No posts found");
+                setError("No posts found");
                 return;
             }
 
@@ -126,7 +100,6 @@ function Home() {
     }
 
     function handleRightBtnClick() {
-        if (currButton + 4 > Math.ceil((currPosts.postsCount / 2))) {
         if (currButton + 4 > Math.ceil((currPosts.postsCount / 2))) {
             return;
         }
@@ -157,16 +130,6 @@ function Home() {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg>
                 </button>
             </div>
-            {
-                error &&
-                <div className="error">{error}</div>
-            }
-            {
-                !error &&
-                <Blog
-                    posts={currPosts.posts ?? currPosts}
-                />
-            }
             {
                 error &&
                 <div className="error">{error}</div>
