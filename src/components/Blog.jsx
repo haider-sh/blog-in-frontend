@@ -10,6 +10,7 @@ function Blog({ posts }) {
                         id={post.id}
                         title={post.title}
                         date={post.created}
+                        content={post.content}
                         description={post.description}
                         author={post.author}
                     />
