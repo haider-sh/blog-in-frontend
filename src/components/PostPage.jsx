@@ -10,12 +10,12 @@ function PostPage() {
     let [comment, setComment] = useState("");
     let [addedComments, setAddedComments] = useState(0);
     let [pageData, setPageData] = useState(null);
-    let { isLoggedIn, loggedIn } = useContext(AppContext);
+    let { loggedIn } = useContext(AppContext);
     let { id } = useParams();
 
     useEffect(() => {
         async function getPostById() {
-            const response = await fetch(`http://localhost:8080/posts/${id}`);
+            const response = await fetch(`https://blog-in-backend.vercel.app/posts/${id}`);
             const post = await response.json();
 
             if (!post.success) {
@@ -29,7 +29,7 @@ function PostPage() {
     }, [id, addedComments]);
 
     async function addComment(){
-        let response = await fetch(`http://localhost:8080/posts/${id}/comments/create`, {
+        let response = await fetch(`https://blog-in-backend.vercel.app/posts/${id}/comments/create`, {
                 method: "POST",
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem("token")}`,
@@ -66,11 +66,15 @@ function PostPage() {
                     {pageData.author.user.username}
                 </div>
                 <div className="description">{pageData.description}</div>
-                <div className="content">{pageData.content}</div>
+                <div 
+                className="content"
+                dangerouslySetInnerHTML={{__html: pageData.content}}
+                >                    
+                </div>
                 <div className="comments">
                     <h2>Comments ({pageData.comments.length})</h2>
                     {
-                        (isLoggedIn() || loggedIn) && 
+                        loggedIn && 
                         <div className="input">
                             <input
                                 type="text"

@@ -9,6 +9,14 @@
     justify-content: space-between;
     gap: 30px;
 
+    .error{
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;        
+    }
+
     .title {
         display: flex;
         flex-direction: column;
