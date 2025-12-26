@@ -35,7 +35,7 @@ function SignupForm() {
         else {
             setError("");
 
-            let response = await fetch("https://blog-in-backend.vercel.app/signup?role=READER", {
+            let response = await fetch("https://blog-in-backend.vercel.app/signup", {
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',

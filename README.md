@@ -1,12 +1,52 @@
-# React + Vite
+# Blog In (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React SPA for browsing and commenting on blogs. Built with Vite, React Router 7, and date-fns; consumes the hosted Blog In backend at `https://blog-in-backend.vercel.app`.
 
-Currently, two official plugins are available:
+## Features
+- Browse paginated posts with quick read-time estimates and author metadata.
+- Keyword search across posts from the landing page.
+- View full post content, metadata, and existing comments.
+- JWT-based auth with localStorage persistence; login/signup flows.
+- Add comments to a post when authenticated.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+- Vite 7 + React 19
+- React Router 7
+- date-fns for date formatting
+- ESLint (flat config)
 
-## Expanding the ESLint configuration
+## Project Structure (key files)
+- src/main.jsx – bootstraps the app.
+- src/AppProvider.jsx – wires RouterProvider and auth context state.
+- src/App.jsx – shared layout (header, footer, outlet).
+- src/routes.jsx – route map for home, auth, and post pages.
+- src/components/
+	- Home.jsx – fetch/search/paginate posts.
+	- Post.jsx / Blog.jsx – list and card rendering.
+	- PostPage.jsx – post detail, comments, add comment.
+	- LoginForm.jsx / SignupForm.jsx – auth flows.
+	- Header.jsx / Footer.jsx – chrome and navigation.
+- src/styles/ – component-scoped styles.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Data & API Notes
+- Backend base URL: `https://blog-in-backend.vercel.app` (hardcoded in Home.jsx, LoginForm.jsx, SignupForm.jsx, PostPage.jsx).
+- Auth: JWT saved to `localStorage` via AppContext; logout clears storage.
+- Commenting: requires a stored token; POSTs include `Authorization: Bearer <token>`.
+
+## Running Locally
+1) Install Node.js 18+.
+2) Install dependencies: `npm install`.
+3) Start dev server: `npm run dev` (Vite shows the local URL).
+4) Lint: `npm run lint`.
+5) Production build: `npm run build`; preview build: `npm run preview`.
+
+## Customizing API Endpoints
+If you need a different backend, update the fetch URLs in:
+- src/components/Home.jsx
+- src/components/LoginForm.jsx
+- src/components/SignupForm.jsx
+- src/components/PostPage.jsx
+
+## Deployment
+- Build outputs to `dist/` via `npm run build`.
+- Serve the static output on any static host (Netlify, Vercel, S3 + CloudFront, etc.).
